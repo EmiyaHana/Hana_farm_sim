@@ -30,11 +30,11 @@ public abstract class Animal : MonoBehaviour
 
     public FoodType PreferedFood { get; private set; }
 
-    public virtual void Init(string newName, FoodType preferedFood)
+    public virtual void Init(string newName, int newHunger, int newHappiness, FoodType preferedFood)
     {
         Name = newName;
-        Hunger = 50;
-        Happiness = 50;
+        Hunger = newHunger;
+        Happiness = newHappiness;
         PreferedFood = preferedFood;
     }
 

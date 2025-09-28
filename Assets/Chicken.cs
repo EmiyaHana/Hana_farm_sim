@@ -5,9 +5,9 @@ public class Chicken : Animal
 {
     public int Eggs { get; private set; }
     
-    public override void Init(string newName, FoodType preferedFood)
+    public override void Init(string newName, int newHunger, int newHappiness, FoodType preferedFood)
     {
-        base.Init(newName, FoodType.Grain);
+        base.Init(newName, newHunger, newHappiness, FoodType.Grain);
         Eggs = 0;
     }
 

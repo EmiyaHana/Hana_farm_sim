@@ -8,13 +8,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Chicken Chicken = gameObject.AddComponent<Chicken>();
-        Chicken.Init("Cooper", FoodType.Grain);
+        Chicken.Init("Cooper", 50, 50, FoodType.Grain);
         
         Cow Cow = gameObject.AddComponent<Cow>();
-        Cow.Init("Sebastian", FoodType.Hay);
+        Cow.Init("Sebastian", 50, 50, FoodType.Hay);
         
         Pig Pig = gameObject.AddComponent<Pig>();
-        Pig.Init("Pete", FoodType.Vegetables);
+        Pig.Init("Pete", 50, 50, FoodType.Vegetables);
 
         animals.Add(Chicken);
         animals.Add(Cow);
