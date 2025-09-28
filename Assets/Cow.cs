@@ -3,20 +3,11 @@ using UnityEngine;
 
 public class Cow : Animal
 {
-    private float milk;
-    public float Milk
-    { 
-        get { return milk; }
-        set 
-        {
-            if (value >= 0) milk = value;
-            else milk = 0;
-        }
-    }
+    public float Milk { get; private set; }
 
-    public override void Init(string newName, int newHunger, int newHappiness)
+    public override void Init(string newName, FoodType preferedFood)
     {
-        base.Init(newName, newHunger, newHappiness);
+        base.Init(newName, FoodType.Hay);
         Milk = 0;
     }
 
@@ -26,6 +17,23 @@ public class Cow : Animal
         Debug.Log($"Milk : {Milk}");
     }
 
+    public override void Produce()
+    {   
+        int Produced = 0;
+        if (Happiness >= 70)
+        {
+            Produced = Happiness/10;
+        }
+        else
+        {
+            Produced = 0;
+        }
+
+        Milk += Produced;
+        Debug.Log($"{Name} produces {Produced} units of milk.");
+        Debug.Log($"Milk : {Milk} units");
+    }
+
     public override void MakeSound()
     {
         Debug.Log("Moo! Moo!");
@@ -33,12 +41,9 @@ public class Cow : Animal
 
     public void Moo()
     {
+        AdjustHappiness(10);
+
         Debug.Log($"Moo! Moo! Moo! {Name} is mooing loudly and very happy now!");
-
-        IsFeeded = false;
-        IsMoo = true;
-
-        AdjustHunger();
-        AdjustHappiness();
+        Debug.Log($"Hunger : {Hunger} | Happiness : {Happiness}");
     }
 }

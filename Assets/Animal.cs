@@ -1,5 +1,15 @@
 using UnityEngine;
 
+public enum FoodType
+{
+    Hay,
+    Grain,
+    Vegetables,
+    Fruits,
+    RottenFood,
+    AnimalFood
+}
+
 public abstract class Animal : MonoBehaviour
 {
     private string name;
@@ -12,39 +22,20 @@ public abstract class Animal : MonoBehaviour
         }
     }
 
-    private int hunger;
-    public int Hunger 
-    {
-        get { return hunger; }
-        set 
-        { 
-            if (value > 50) { hunger = 50; }
-            else if (value <= 0) { hunger = 0; }
-            else { hunger = value; }
-        }
-    }
+    public int Hunger { get; protected set; }
+    protected int maxHunger = 100;
 
-    private int happiness;
-    public int Happiness
-    { 
-        get { return happiness; }
-        set 
-        {
-            if (value > 50) { happiness = 50; }
-            else if (value <= 0) { happiness = 0; }
-            else { happiness = value; }
-        }
-    }
+    public int Happiness { get; protected set; }
+    protected int maxHappiness = 100;
 
-    public bool IsFeeded = false;
-    public bool IsSleep = false;
-    public bool IsMoo = false;
+    public FoodType PreferedFood { get; private set; }
 
-    public virtual void Init(string newName, int newHunger, int newHappiness)
+    public virtual void Init(string newName, FoodType preferedFood)
     {
         Name = newName;
-        Hunger = newHunger;
-        Happiness = newHappiness;
+        Hunger = 50;
+        Happiness = 50;
+        PreferedFood = preferedFood;
     }
 
     public virtual void ShowStat()
@@ -52,57 +43,58 @@ public abstract class Animal : MonoBehaviour
         Debug.Log($"Name : {Name} | Hunger : {Hunger} | Happiness : {Happiness}");
     }
 
-    public virtual void MakeSound()
+    public abstract void MakeSound();
+
+    public abstract void Produce();
+
+    public void Feed(int amount)
     {
-        /*Debug.Log("There's a sound louding...'");*/
+        AdjustHunger(-amount);
+        AdjustHappiness(amount/2);
+
+        Debug.Log($"{Name} was fed {amount} units of food.");
+        Debug.Log($"Hunger : {Hunger} | Happiness : {Happiness}");
     }
 
-    public void Feed(string Feed)
+    public void Feed(FoodType Food, int amount)
     {
-        Debug.Log($"C'mon {Name}! Here's your {Feed}.");
-        Debug.Log($"{Name} eat {Feed} Happily!");
-
-        IsFeeded = true;
-        IsSleep = false;
-
-        AdjustHunger();
-        AdjustHappiness();
-    }
-
-    public void Feed(string Feed, int amount)
-    {
-        Debug.Log($"C'mon {Name}! Here's your {Feed}.");
-        Debug.Log($"{Name} eat {Feed} Happily!");
-        Debug.Log($"Feeding {Name} with {amount} of {Feed}!");
-
-        IsFeeded = true;
-        IsSleep = false;
-
-        AdjustHunger();
-        AdjustHappiness();
-    }
-
-    public void AdjustHunger()
-    {
-        if (IsFeeded)
+        if (Food == PreferedFood)
         {
-           Hunger -= 10;
+            AdjustHunger(-amount);
+            AdjustHappiness(15);
+
+            Debug.Log($"C'mon {Name}! Here's your {Food}.");
+            Debug.Log($"{Name} eat {Food} Happily!");
+            Debug.Log($"Feeding {Name} with {amount} of {Food}!");
+            Debug.Log($"Hunger : {Hunger} | Happiness : {Happiness}");
+        }
+        else if (Food == FoodType.RottenFood)
+        {
+            AdjustHunger(0);
+            AdjustHappiness(-20);
+
+            Debug.Log($"Eww!?");
+            Debug.Log($"{Name} eat rotten food! It's not Happy at all!'");
+            Debug.Log($"Feeding {Name} with {amount} of rotten food!");
+            Debug.Log($"Hunger : {Hunger} | Happiness : {Happiness}");
+        }
+        else if (Food == FoodType.AnimalFood)
+        {
+            Feed(amount);
         }
         else
         {
-           Hunger += 5;
+            Feed(amount);
         }
     }
 
-    public void AdjustHappiness()
+    public void AdjustHunger(int value)
     {
-        if (IsSleep)
-        {
-           Happiness += 10;
-        }
-        else
-        {
-           Happiness += 5;
-        }
+        Hunger = Mathf.Clamp(Hunger + value, 0, maxHunger);
+    }
+
+    public void AdjustHappiness(int value)
+    {
+        Happiness = Mathf.Clamp(Happiness + value, 0, maxHappiness);
     }
 }

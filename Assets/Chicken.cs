@@ -3,20 +3,11 @@ using UnityEngine;
 
 public class Chicken : Animal
 {
-    private int eggs;
-    public int Eggs
-    { 
-        get { return eggs; }
-        set 
-        {
-            if (value >= 0) eggs = value;
-            else eggs = 0;
-        }
-    }
-
-    public override void Init(string newName, int newHunger, int newHappiness)
+    public int Eggs { get; private set; }
+    
+    public override void Init(string newName, FoodType preferedFood)
     {
-        base.Init(newName, newHunger, newHappiness);
+        base.Init(newName, FoodType.Grain);
         Eggs = 0;
     }
 
@@ -26,6 +17,23 @@ public class Chicken : Animal
         Debug.Log($"Eggs : {Eggs}");
     }
 
+    public override void Produce()
+    {
+        int Produced = 0;
+        if (Happiness >= 51 && Happiness <= 79)
+        {
+            Produced = 2;
+        }
+        else if (Happiness >= 80)
+        {
+            Produced = 3;
+        }
+        
+        Eggs += Produced;
+        Debug.Log($"{Name} produces {Produced} units of eggs.");
+        Debug.Log($"Eggs : {Eggs} units");
+    }
+
     public override void MakeSound()
     {
         Debug.Log("Cluck! Cluck!");
@@ -33,12 +41,10 @@ public class Chicken : Animal
 
     public void Sleep()
     {
+        AdjustHunger(5);
+        AdjustHappiness(10);
+
         Debug.Log($"{Name} is Sleeping now! {Name} feels a bit hungry but still happy!");
-
-        IsFeeded = false;
-        IsSleep = true;
-
-        AdjustHunger();
-        AdjustHappiness();
+        Debug.Log($"Hunger : {Hunger} | Happiness : {Happiness}");
     }
 }
